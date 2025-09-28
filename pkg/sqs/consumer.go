@@ -111,10 +111,10 @@ func (s *SqsConsumer) Start(ctx context.Context) error {
 	wg.Add(s.config.Concurrency)
 	for i := 0; i < s.config.Concurrency; i++ {
 		go func() {
+			defer wg.Done()
 			for message := range s.messages {
 				s.processMessage(message)
 			}
-			wg.Done()
 			slog.Error("[SQS-Consumber] Stopped worker")
 		}()
 	}
